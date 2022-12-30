@@ -103,14 +103,14 @@
 
 	{#if isLogged === true}
 		<a
-			href="/login"
+			href="/signin"
 			use:link
 			class="btn btn-lg btn-primary"
 			on:click={handleLogout}>Logout</a
 		>
 	{:else}
 		<a
-			href="/login"
+			href="/signin"
 			use:link
 			class="btn btn-lg btn-primary"
 			on:click={handleLogout}>Login</a

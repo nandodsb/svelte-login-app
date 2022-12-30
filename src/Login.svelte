@@ -1,6 +1,4 @@
-<script lang="ts">
-	import api from './api'
-	import axios from 'axios'
+<script lang="ts">	
 	import { push } from 'svelte-spa-router'
 	import { writable } from 'svelte/store'
 	import { login } from './router'

@@ -17,8 +17,7 @@
 </script>
 
 <!-- BOOTSTRAP  -->
-<!-- 
-  <header class="p-3 bg-dark text-white">
+<!-- <header class="p-3 bg-dark text-white">
   <div class="container">
     <div class="d-flex flex-wrap align-item-center justify-content-center justify-content-lg-start">
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
@@ -36,7 +35,7 @@
 </header> -->
 
 <!-- TAILWIND -->
-<header class="text-white body-font bg-red-400">
+<header class="text-white body-font bg-indigo-500">
 	<div
 		class="container mx-auto flex flex-wrap pt-3 pb-2 flex-col md:flex-row items-center"
 	>
@@ -51,8 +50,8 @@
 		<nav
 			class="md:ml-auto mb-2 flex flex-wrap items-center text-base justify-center"
 		>
-			<a href="/login" use:link class="mr-5 hover:text-gray-900">Login</a>
-			<a href="/register" use:link class="mr-5 hover:text-gray-900">Register</a>
+			<!-- <a href="/login" use:link class="mr-5 hover:text-gray-900">Login</a>
+			<a href="/register" use:link class="mr-5 hover:text-gray-900">Register</a> -->
 			<a href="/signin" use:link class="mr-5 hover:text-gray-900">Sign in</a>
 			<a href="/signup" use:link class="mr-5 hover:text-gray-900">Sign up</a>
 		</nav>

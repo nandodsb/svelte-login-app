@@ -16,6 +16,7 @@
     "@rollup/plugin-typescript": "^8.0.0",
     "@sveltejs/kit": "^1.0.1",
     "@tsconfig/svelte": "^2.0.0",
+    "@types/mithril": "^2.0.12",
     "autoprefixer": "^10.4.13",
     "classnames": "^2.3.2",
     "dotenv": "^16.0.3",
@@ -42,6 +43,7 @@
     "cookies": "^0.8.0",
     "js-cookie": "^3.0.1",
     "kit": "github:sveltejs/kit",
+    "mithril": "^2.2.2",
     "sirv-cli": "^2.0.0",
     "svelte-spa-router": "^3.3.0"
   }

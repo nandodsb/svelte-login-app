@@ -1,4 +1,5 @@
-<script lang="ts">	
+<script lang="ts">
+	import m from 'mithril'
 	import { push } from 'svelte-spa-router'
 	import { writable } from 'svelte/store'
 	import { login } from './router'
@@ -10,7 +11,7 @@
 	let username = '',
 		password = ''
 	let combined, success
-	let data
+	let data, body
 	$: combined = { username: username, password: password }
 
 	$: if (data) {
@@ -18,28 +19,37 @@
 	}
 
 	$: handleLogin = async () => {
-		console.log(login)
-		let response = await fetch(login, {
-			method: 'POST',
-			mode: 'cors',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(combined),
-		})
+		await m
+			.request({
+				method: 'POST',
+				url: login,
+				body: combined,
+				withCredentials: true,
+			})
+			.then(() => {
+				push('/')
+			})
 
-		const data = await response.json()
-		console.log(data)
+		console.log(combined)
 
-		console.log('Response Login =>', response)
-		console.log('Response data =>', combined)
-		await push('/')
+		// console.log(login)
+		// let response = await fetch(login, {
+		// 	method: 'POST',
+		// 	mode: 'cors',
+		// 	credentials: 'include',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// 	body: JSON.stringify(combined),
+		// })
+		// await response.json()
+
+		// await push('/')
 	}
 </script>
 
-<main class="mb-3 mt-5 form-signin container">
-	<form class="container" on:submit|preventDefault={handleLogin}>
+<main class="card mb-3 mt-5 form-signin container justify-center">
+	<form class="container mb-8 mt-6" on:submit|preventDefault={handleLogin}>
 		<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
 		<div class="mb-3 form-floating">

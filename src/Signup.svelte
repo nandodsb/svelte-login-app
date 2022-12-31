@@ -1,9 +1,59 @@
-<script>
+<script lang="ts">
+	import api from './api'
+	import axios from 'axios'
+	import { push } from 'svelte-spa-router'
+	import { writable } from 'svelte/store'
+	import { register } from './router'
+
+	let session = writable({ data: '' })
+
+	let name = '',
+		username = '',
+		email = '',
+		password = ''
+
+	let combined
+
+	$: combined = {
+		name: name,
+		email: email,
+		username: username,
+		password: password,
+	}
+
+	let data
+	$: if (data) {
+		$session.data = data
+	}
+
+	// interface ICombined {
+	//     name: string,
+	//     email: string,
+	//     username: string,
+	//     password: string,
+	// }
+
+	$: handleRegister = async () => {
+		console.log(register)
+		let response = await fetch(register, {
+			method: 'POST',
+			mode: 'cors',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(combined),
+		})
+
+		const info = await response.json()
+
+		await push('/signin')
+	}
 </script>
 
 <section class="text-gray-600 body-font">
-	<div class="container px-5 py-20 mx-auto flex flex-wrap items-center">
-		<div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+	<div class="container px-5 py-12 mx-auto flex flex-wrap items-start">
+		<div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0 mt-10">
 			<h1 class="title-font font-medium text-3xl text-gray-900">
 				Slow-carb next level shoindcgoitch ethical authentic, poko scenester
 			</h1>
@@ -13,16 +63,18 @@
 			</p>
 		</div>
 
-		<div
+		<form
+			on:submit|preventDefault={handleRegister}
 			class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
 		>
-			<h2 class="text-gray-900 text-lg text-center font-medium title-font mb-5">
+			<h2 class="text-gray-900 text-lg text-center font-medium title-font mb-2">
 				Sign Up
 			</h2>
 
 			<div class="relative mb-4">
 				<label for="name" class="leading-7 text-sm text-gray-600">Name</label>
 				<input
+					bind:value={name}
 					type="text"
 					id="name"
 					name="name"
@@ -33,6 +85,7 @@
 			<div class="relative mb-4">
 				<label for="email" class="leading-7 text-sm text-gray-600">Email</label>
 				<input
+					bind:value={email}
 					type="email"
 					id="email"
 					name="email"
@@ -45,6 +98,7 @@
 					>Username</label
 				>
 				<input
+					bind:value={username}
 					type="text"
 					id="username"
 					name="username"
@@ -57,6 +111,7 @@
 					>Password</label
 				>
 				<input
+					bind:value={password}
 					type="password"
 					id="password"
 					name="password"
@@ -65,12 +120,10 @@
 			</div>
 
 			<button
+				type="submit"
 				class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
 				>Register</button
 			>
-			<p class="text-xs text-gray-500 mt-3">
-				Literally you probably haven't heard of them jean shorts.
-			</p>
-		</div>
+		</form>
 	</div>
 </section>

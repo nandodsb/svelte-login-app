@@ -18,7 +18,6 @@
 	}
 
 	$: handleLogin = async () => {
-		console.log(login)
 		let response = await fetch(login, {
 			method: 'POST',
 			mode: 'cors',
@@ -29,15 +28,15 @@
 			body: JSON.stringify(combined),
 		})
 
-		await response.json()		
+		await response.json()
 
 		await push('/')
 	}
 </script>
 
 <section class="text-gray-600 body-font">
-	<div class="container px-5 py-20 mx-auto flex flex-wrap items-center">
-		<div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0">
+	<div class="container px-5 py-12 mx-auto flex flex-wrap items-start">
+		<div class="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0 mt-10">
 			<h1 class="title-font font-medium text-3xl text-gray-900">
 				Slow-carb next level shoindcgoitch ethical authentic, poko scenester
 			</h1>
@@ -51,7 +50,7 @@
 			on:submit|preventDefault={handleLogin}
 			class="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
 		>
-			<h2 class="text-gray-900 text-lg text-center font-medium title-font mb-5">
+			<h2 class="text-gray-900 text-lg text-center font-medium title-font mb-2">
 				Sign In
 			</h2>
 

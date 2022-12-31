@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { link, push } from 'svelte-spa-router'
+	import { link } from 'svelte-spa-router'
 	import { getMe, logout } from './router'
 	import { Toast } from 'flowbite-svelte'
 	import { fly } from 'svelte/transition'
-	import Cookies from 'js-cookie'
 
 	let greeting = 'Welcome, sign in to your account'
 	let message = 'You are not logged in'
 	let success = false
-	let info
 	let isLogged = false
 
 	onMount(async () => {
@@ -46,7 +44,7 @@
 	}
 </script>
 
-<main class="container mt-5 text-center">
+<section class="text-gray-600 body-font">
 	{#if success === true}
 		<Toast
 			color="green"
@@ -72,48 +70,27 @@
 			</svelte:fragment>
 			<span>{message}</span>
 		</Toast>
-	{:else}
-		<Toast
-			color="red"
-			class="mb-2"
-			position="top-right"
-			transition={fly}
-			params={{ x: 200 }}
-		>
-			<svelte:fragment slot="icon">
-				<svg
-					aria-hidden="true"
-					class="w-5 h-5"
-					fill="currentColor"
-					viewBox="0 0 20 20"
-					xmlns="http://www.w3.org/2000/svg"
-					><path
-						fill-rule="evenodd"
-						d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-						clip-rule="evenodd"
-					/></svg
-				>
-				<span class="sr-only">Error icon</span>
-			</svelte:fragment>
-			<span>{message}</span>
-		</Toast>
 	{/if}
-
-	<h3>{greeting}</h3>
-
-	{#if isLogged === true}
-		<a
-			href="/signin"
-			use:link
-			class="btn btn-lg btn-primary"
-			on:click={handleLogout}>Logout</a
+	<div class="container px-5 py-24 mx-auto">
+		<h1
+			class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900"
+		/>
+		<div
+			class="lg:w-2/3 flex flex-col sm:flex-row sm:items-center items-start mx-auto"
 		>
-	{:else}
-		<a
-			href="/signin"
-			use:link
-			class="btn btn-lg btn-primary"
-			on:click={handleLogout}>Login</a
-		>
-	{/if}
-</main>
+			<h1
+				class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900"
+			>
+				{greeting}
+			</h1>
+			<a
+				href="/signin"
+				use:link
+				on:click={handleLogout}
+				class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0"
+			>
+				{#if isLogged === true}Logout{:else}Login{/if}</a
+			>
+		</div>
+	</div>
+</section>

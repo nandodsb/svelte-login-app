@@ -37,14 +37,14 @@
 <!-- TAILWIND -->
 <header class="text-white body-font bg-indigo-500">
 	<div
-		class="container mx-auto flex flex-wrap pt-3 pb-2 flex-col md:flex-row items-center"
+		class="container mx-auto flex flex-wrap pt-3 pb-2 px-8 flex-col md:flex-row justify-center items-center"
 	>
 		<a
 			href="/"
 			use:link
 			class="flex flex-wrap text-medium items-center text-gray-900 mb-2 ml:mb-auto"
 		>
-			<span class="ml-3 text-xl text-white">Tailblocks</span>
+			<span class="text-xl text-white">Svelte Login App</span>
 		</a>
 
 		<nav

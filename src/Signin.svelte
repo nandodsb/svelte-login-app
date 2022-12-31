@@ -1,21 +1,12 @@
 <script>
 	import { push } from 'svelte-spa-router'
-	import { writable } from 'svelte/store'
 	import { login } from './router'
 
-	let session = writable({ data: '' })
-
-	let phrase = '',
-		message = ''
 	let username = '',
 		password = ''
-	let combined, success
-	let data
-	$: combined = { username: username, password: password }
+	let combined 
 
-	$: if (data) {
-		$session.data = data
-	}
+	$: combined = { username: username, password: password }
 
 	$: handleLogin = async () => {
 		let response = await fetch(login, {

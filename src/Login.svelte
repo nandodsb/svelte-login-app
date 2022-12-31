@@ -1,22 +1,20 @@
 <script lang="ts">
 	import m from 'mithril'
 	import { push } from 'svelte-spa-router'
-	import { writable } from 'svelte/store'
 	import { login } from './router'
+	import { auth } from './stores.js'
 
-	let session = writable({ data: '' })
+	let session
 
-	let phrase = '',
-		message = ''
+	auth.subscribe((value) => {
+		session = value
+	})
+
 	let username = '',
 		password = ''
-	let combined, success
-	let data, body
-	$: combined = { username: username, password: password }
+	let combined
 
-	$: if (data) {
-		$session.data = data
-	}
+	$: combined = { username: username, password: password }
 
 	$: handleLogin = async () => {
 		await m
@@ -27,7 +25,12 @@
 				withCredentials: true,
 			})
 			.then(() => {
-				push('/')
+				console.log(session)
+				auth.set(true)
+				console.log(session)
+				if (session === true) {
+					push('/register')
+				}
 			})
 
 		console.log(combined)

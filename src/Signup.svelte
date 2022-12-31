@@ -1,11 +1,6 @@
 <script lang="ts">
-	import api from './api'
-	import axios from 'axios'
 	import { push } from 'svelte-spa-router'
-	import { writable } from 'svelte/store'
 	import { register } from './router'
-
-	let session = writable({ data: '' })
 
 	let name = '',
 		username = '',
@@ -19,11 +14,6 @@
 		email: email,
 		username: username,
 		password: password,
-	}
-
-	let data
-	$: if (data) {
-		$session.data = data
 	}
 
 	// interface ICombined {

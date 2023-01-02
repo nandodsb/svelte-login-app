@@ -1,7 +1,6 @@
 <script lang="ts">
-	import m from 'mithril'
 	import { push } from 'svelte-spa-router'
-	import { login } from './router'
+	import { server } from './api'
 	import { auth } from './stores.js'
 
 	let session
@@ -17,37 +16,20 @@
 	$: combined = { username: username, password: password }
 
 	$: handleLogin = async () => {
-		await m
-			.request({
-				method: 'POST',
-				url: login,
-				body: combined,
-				withCredentials: true,
-			})
-			.then(() => {
-				console.log(session)
-				auth.set(true)
-				console.log(session)
-				if (session === true) {
-					push('/register')
+		try {
+			await server.post('login', combined).then((response) => {
+				console.log('Response => ', response)
+				if (response.status === 200) {
+					console.log('Status => ', response.status)
+				} else {
 				}
 			})
-
-		console.log(combined)
-
-		// console.log(login)
-		// let response = await fetch(login, {
-		// 	method: 'POST',
-		// 	mode: 'cors',
-		// 	credentials: 'include',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// 	body: JSON.stringify(combined),
-		// })
-		// await response.json()
-
-		// await push('/')
+		} catch (error) {
+			console.log(error)
+			console.log(error.response.data)
+			console.log(error.response.status)
+		}
+		await push('/')
 	}
 </script>
 

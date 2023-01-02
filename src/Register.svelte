@@ -1,9 +1,7 @@
 <script lang="ts">
-	import api from './api'
-	import axios from 'axios'
 	import { push } from 'svelte-spa-router'
 	import { writable } from 'svelte/store'
-	import { register } from './router'
+	import { server } from './api'
 
 	let session = writable({ data: '' })
 
@@ -34,22 +32,19 @@
 	// }
 
 	$: handleRegister = async () => {
-		console.log(register)
-		let response = await fetch(register, {
-			method: 'POST',
-			mode: 'cors',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(combined),
-		})
-
-		const info = await response.json()
-		console.log(info)
-
-		console.log('Response =>', info.data)
-
+		try {
+			await server.post('register', combined).then((response) => {
+				console.log('Response => ', response)
+				if (response.status === 200) {
+					console.log('Status => ', response.status)
+				} else {
+				}
+			})
+		} catch (error) {
+			console.log(error)
+			console.log(error.response.data)
+			console.log(error.response.status)
+		}
 		await push('/login')
 	}
 </script>

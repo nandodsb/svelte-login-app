@@ -6,6 +6,7 @@
 	import { Toast } from 'flowbite-svelte'
 	import { fly } from 'svelte/transition'
 	import { greeting, isLogged, message, success } from './stores.js'
+	import { server } from './api'
 
 	let setGreeting, setIsLogged, setMessage, setSuccess
 
@@ -26,18 +27,9 @@
 	})
 
 	onMount(async () => {
-		let response = await fetch(getMe, {
-			method: 'GET',
-			mode: 'cors',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
+		let response = await server('getme')
 
-		console.log(response)
-
-		let info = await response.json()
+		let info = await response.data
 
 		if (response.status === 200) {
 			setGreeting = `Welcome ${info.data.name}`
@@ -50,46 +42,10 @@
 			setMessage
 			setSuccess = false
 		}
-
-		// await m
-		// 	.request({
-		// 		method: 'GET',
-		// 		url: getMe,
-		// 		withCredentials: true,
-		// 		extract: function (xhr) {
-		// 			return { status: xhr.status, body: xhr.responseText }
-		// 		},
-		// 	})
-
-		// 	.then(function (response) {
-		// 		console.log(response.status, response.body)
-		// 		if (response.status === 200) {
-		// 			setGreeting = `Welcome ${response.body}`
-		// 			setMessage = `You are logged!`
-		// 			setSuccess = true
-		// 			setIsLogged = true
-		// 		}
-
-		// 		if (response.status === 404) {
-		// 			setMessage
-		// 			setSuccess = false
-		// 		}
-		// 	})
 	})
 
 	$: handleLogout = async () => {
-		// await fetch(logout, {
-		// 	method: 'DELETE',
-		// 	mode: 'cors',
-		// 	credentials: 'include',
-		// })
-		// setSuccess = false
-
-		await m.request({
-			method: 'DELETE',
-			url: logout,
-			withCredentials: true,
-		})
+		await server('logout')
 		setSuccess = false
 	}
 </script>

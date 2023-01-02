@@ -1,7 +1,9 @@
 import axios from 'axios'
 
-const api = axios.create({
-    baseURL: 'http://localhost:4000/api/auth',
+const server = axios.create({
+    baseURL: 'http://localhost:4000/api/auth/',
 })
-
-export default api
+server.defaults.withCredentials = true
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+export { server, axios }

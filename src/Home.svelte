@@ -1,8 +1,6 @@
 <script lang="ts">
-	import m from 'mithril'
 	import { onMount } from 'svelte'
 	import { link } from 'svelte-spa-router'
-	import { getMe, logout } from './router'
 	import { Toast } from 'flowbite-svelte'
 	import { fly } from 'svelte/transition'
 	import { greeting, isLogged, message, success } from './stores.js'
@@ -27,7 +25,7 @@
 	})
 
 	onMount(async () => {
-		let response = await server('getme')
+		let response = await server.get('getme')
 
 		let info = await response.data
 
@@ -44,8 +42,8 @@
 		}
 	})
 
-	$: handleLogout = async () => {
-		await server('logout')
+	$: handleLogout = () => {
+		server.delete('logout')
 		setSuccess = false
 	}
 </script>

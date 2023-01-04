@@ -1,42 +1,35 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
-	import { register } from './router'
+	import { server } from './api'
 
 	let name = '',
 		username = '',
 		email = '',
 		password = ''
 
-	let combined
+	let form_data
 
-	$: combined = {
+	$: form_data = {
 		name: name,
 		email: email,
 		username: username,
 		password: password,
 	}
 
-	// interface ICombined {
-	//     name: string,
-	//     email: string,
-	//     username: string,
-	//     password: string,
-	// }
-
 	$: handleRegister = async () => {
-		console.log(register)
-		let response = await fetch(register, {
-			method: 'POST',
-			mode: 'cors',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(combined),
-		})
-
-		const info = await response.json()
-
+		try {
+			await server.post('register', form_data).then((response) => {
+				console.log('Response => ', response)
+				if (response.status === 200) {
+					console.log('Status => ', response.status)
+				} else {
+				}
+			})
+		} catch (error) {
+			console.log(error)
+			console.log(error.response.data)
+			console.log(error.response.status)
+		}
 		await push('/signin')
 	}
 </script>

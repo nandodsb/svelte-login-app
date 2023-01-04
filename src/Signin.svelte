@@ -1,26 +1,25 @@
 <script>
+	
 	import { push } from 'svelte-spa-router'
-	import { login } from './router'
+	import { server } from './api'
+
 
 	let username = '',
 		password = ''
-	let combined 
+	let form_data
 
-	$: combined = { username: username, password: password }
+	$: form_data = { username: username, password: password }
 
 	$: handleLogin = async () => {
-		let response = await fetch(login, {
-			method: 'POST',
-			mode: 'cors',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(combined),
-		})
-
-		await response.json()
-
+		try {
+			await server.post('login', form_data).then((response) => {
+				console.log('Response => ', response)
+				if (response.status === 200) {
+					console.log('Status => ', response.status)
+				} else {
+				}
+			})
+		} catch (error) {}
 		await push('/')
 	}
 </script>

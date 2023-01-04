@@ -1,13 +1,6 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import { server } from './api'
-	import { auth } from './stores.js'
-
-	let session
-
-	auth.subscribe((value) => {
-		session = value
-	})
 
 	let username = '',
 		password = ''

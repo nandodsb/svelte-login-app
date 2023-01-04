@@ -3,9 +3,12 @@
 	import Login from './Login.svelte'
 	import Register from './Register.svelte'
 	import Home from './Home.svelte'
-	import Router, { link } from 'svelte-spa-router'
+	import Router, { link, push } from 'svelte-spa-router'
 	import Signin from './Signin.svelte'
 	import Signup from './Signup.svelte'
+	import { greeting, isLogged, message, success, token } from './stores'
+	import { server } from './api'
+	import { fetcher } from './fetcher.ts'
 
 	const routes = {
 		'/': Home,
@@ -14,25 +17,38 @@
 		'/signin': Signin,
 		'/signup': Signup,
 	}
+
+	let setGreeting, setIsLogged, setMessage, setSuccess, setToken
+	let info
+
+	greeting.subscribe((value) => {
+		setGreeting = value
+	})
+
+	isLogged.subscribe((value) => {
+		setIsLogged = value
+	})
+
+	message.subscribe((value) => {
+		setMessage = value
+	})
+
+	success.subscribe((value) => {
+		setSuccess = value
+	})
+
+	fetcher().then((response) => {
+		console.log(isLogged)
+		info = response.data
+		setIsLogged = true
+	})
+
+	$: handleLogout = () => {
+		server.delete('logout')
+		setIsLogged = false
+		setSuccess = false
+	}
 </script>
-
-<!-- BOOTSTRAP  -->
-<!-- <header class="p-3 bg-dark text-white">
-  <div class="container">
-    <div class="d-flex flex-wrap align-item-center justify-content-center justify-content-lg-start">
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li>
-          <a href="/" use:link class="nav-link px-2 text-white">Home</a>
-        </li>
-      </ul>
-
-      <div class="text-end">
-        <a href="/login" use:link class="btn btn-outline-light me-2">Login</a>
-        <a href="/register" use:link class="btn btn-outline-light me-2">Register</a>
-      </div>
-    </div>
-  </div>
-</header> -->
 
 <!-- TAILWIND -->
 <header class="text-white body-font bg-indigo-500">
@@ -52,11 +68,21 @@
 		>
 			<!-- <a href="/login" use:link class="mr-5 hover:text-gray-900">Login</a>
 			<a href="/register" use:link class="mr-5 hover:text-gray-900">Register</a> -->
-			<a href="/signin" use:link class="mr-5 hover:text-gray-900">Sign in</a>
-			<a href="/signup" use:link class="mr-5 hover:text-gray-900">Sign up</a>
+			{#if setIsLogged === false}
+				<a href="/signin" use:link class="mr-5 hover:text-gray-900">Sign in</a>
+				<a href="/signup" use:link class="mr-5 hover:text-gray-900">Sign up</a>
+			{:else if setIsLogged === true}
+				<p class="mr-5">{info.data.email}</p>
+				<a
+					href="/signin"
+					use:link
+					on:click={handleLogout}
+					use:link
+					class="mr-5 hover:text-gray-900">Logout</a
+				>
+			{/if}
 		</nav>
 	</div>
 </header>
 
 <Router {routes} />
-

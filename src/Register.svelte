@@ -1,39 +1,24 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
-	import { writable } from 'svelte/store'
 	import { server } from './api'
-
-	let session = writable({ data: '' })
 
 	let name = '',
 		username = '',
 		email = '',
 		password = ''
 
-	let combined
+	let form_data
 
-	$: combined = {
+	$: form_data = {
 		name: name,
 		email: email,
 		username: username,
 		password: password,
 	}
 
-	let data
-	$: if (data) {
-		$session.data = data
-	}
-
-	// interface ICombined {
-	//     name: string,
-	//     email: string,
-	//     username: string,
-	//     password: string,
-	// }
-
 	$: handleRegister = async () => {
 		try {
-			await server.post('register', combined).then((response) => {
+			await server.post('register', form_data).then((response) => {
 				console.log('Response => ', response)
 				if (response.status === 200) {
 					console.log('Status => ', response.status)

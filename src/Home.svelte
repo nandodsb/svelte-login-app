@@ -1,16 +1,24 @@
 <script lang="ts">
 	import { link } from 'svelte-spa-router'
-	import { greeting, isLogged, message, success, token } from './stores'
+	import {
+		greeting,
+		isLogged,
+		message,
+		success,
+		IsDisconnected		
+	} from './stores'
 	import { server } from './api'
 	import { Toast } from 'flowbite-svelte'
 	import { fly } from 'svelte/transition'
-	import { onMount } from 'svelte'
+	import { onMount, onDestroy } from 'svelte'
+	import { fetcher } from './fetcher.ts'
 
-	let setGreeting, setIsLogged, setMessage, setSuccess, setToken
-
-	token.subscribe((value) => {
-		setToken = value
-	})
+	let setGreeting,
+		setIsLogged,
+		setMessage,
+		setSuccess,
+		setIsDisconnected
+		
 
 	greeting.subscribe((value) => {
 		setGreeting = value
@@ -28,23 +36,52 @@
 		setSuccess = value
 	})
 
+	IsDisconnected.subscribe((value) => {
+		setIsDisconnected = value
+	})
+
+	
+
+	// let csrfToken = document
+	// 	.querySelector("meta[name='csrf-token']")
+	// 	.getAttribute('content')
+
+	// let data = {
+	// 	_csrf_token: csrfToken,
+	// }
+
+	
+
+	// fetcher()
+	// 	.then((response) => {
+	// 		info = response.data
+	// 		console.log(info.data)
+	// 		setMessage = `You are logged!`
+	// 		setGreeting = `Welcome ${info.data.name}`
+	// 		setIsLogged = true
+	// 		setIsDisconnected = false
+	// 	})
+	// 	.catch(function (error) {
+	// 		if (error.status === 401) {
+	// 			setMessage
+	// 			setSuccess = false
+	// 			console.log(error)
+	// 		}
+	// 	})
+
 	onMount(async () => {
 		try {
 			let response = await server.get('getme')
-
-			const token = `${document.cookie}`
-			console.log(token)
 
 			let info = await response.data
 
 			if (response.status === 200) {
 				setGreeting = `Welcome ${info.data.name}`
-				setMessage = `You are logged!`
-				setSuccess = true
+				setMessage = `You are logged!`				
 				setIsLogged = true
 			}
 		} catch (error) {
-			if (error.status === 401) {
+			if (error.status !== 200) {
 				setMessage
 				setSuccess = false
 				console.log(error)
@@ -52,9 +89,9 @@
 		}
 	})
 
-	$: handleLogout = () => {
-		server.delete('logout')
-		setIsLogged = false
+	async function handleLogout() {
+		await server.delete('logout')
+		setIsDisconnected = true
 		setSuccess = false
 	}
 </script>
@@ -122,20 +159,20 @@
 				{setGreeting}
 			</h1>
 
-			{#if setIsLogged === true}
+			{#if setIsDisconnected === true}
+				<a
+					href="/signin"
+					use:link
+					class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0"
+					>Login</a
+				>
+			{:else if setIsLogged === true}
 				<a
 					href="/signin"
 					use:link
 					on:click={handleLogout}
 					class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0"
 					>Logout</a
-				>
-			{:else}
-				<a
-					href="/signin"
-					use:link
-					class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0"
-					>Login</a
 				>
 			{/if}
 		</div>

@@ -1,3 +1,4 @@
+import { onDestroy, onMount } from 'svelte'
 import { server } from '../api'
 import { greeting, isLogged, message, success, token } from '../stores'
 
@@ -16,9 +17,10 @@ success.subscribe((value) => {
 })
 
 async function fetcher() {
-  let fetching = await server.get('getme')
-  setSuccess = true
-  setIsLogged = true
+  let fetching
+  if (setIsLogged === true) {
+    fetching = await server.get('getme')
+  }
   return fetching
 }
 

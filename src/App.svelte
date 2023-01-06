@@ -6,9 +6,11 @@
 	import Router, { link, push } from 'svelte-spa-router'
 	import Signin from './Signin.svelte'
 	import Signup from './Signup.svelte'
-	import { greeting, isLogged, message, success, token } from './stores'
+	import { greeting, isLogged, message, success } from './stores'
 	import { server } from './api'
 	import { fetcher } from './fetcher.ts'
+	import { onDestroy } from 'svelte'
+	import Header from './Header.svelte'
 
 	const routes = {
 		'/': Home,
@@ -18,40 +20,42 @@
 		'/signup': Signup,
 	}
 
-	let setGreeting, setIsLogged, setMessage, setSuccess, setToken
-	let info
+	// let setGreeting, setIsLogged, setMessage, setSuccess, setToken
+	// let info
 
-	greeting.subscribe((value) => {
-		setGreeting = value
-	})
+	// greeting.subscribe((value) => {
+	// 	setGreeting = value
+	// })
 
-	isLogged.subscribe((value) => {
-		setIsLogged = value
-	})
+	// let unsubscribe = isLogged.subscribe((value) => {
+	// 	setIsLogged = value
+	// })
 
-	message.subscribe((value) => {
-		setMessage = value
-	})
+	// onDestroy(unsubscribe)
 
-	success.subscribe((value) => {
-		setSuccess = value
-	})
+	// message.subscribe((value) => {
+	// 	setMessage = value
+	// })
 
-	fetcher().then((response) => {
-		console.log(isLogged)
-		info = response.data
-		setIsLogged = true
-	})
+	// success.subscribe((value) => {
+	// 	setSuccess = value
+	// })
 
-	$: handleLogout = () => {
-		server.delete('logout')
-		setIsLogged = false
-		setSuccess = false
-	}
+	// fetcher().then((response) => {
+	// 	info = response.data
+	// 	setIsLogged = true
+	// })
+
+	// $: handleLogout = () => {
+	// 	server.delete('logout')
+	// 	setIsLogged = false
+	// 	setSuccess = false
+	// 	onDestroy(unsubscribe)
+	// }
 </script>
 
 <!-- TAILWIND -->
-<header class="text-white body-font bg-indigo-500">
+<!-- <header class="text-white body-font bg-indigo-500">
 	<div
 		class="container mx-auto flex flex-wrap pt-3 pb-2 px-8 flex-col md:flex-row justify-center items-center"
 	>
@@ -68,7 +72,7 @@
 		>
 			<!-- <a href="/login" use:link class="mr-5 hover:text-gray-900">Login</a>
 			<a href="/register" use:link class="mr-5 hover:text-gray-900">Register</a> -->
-			{#if setIsLogged === false}
+<!-- {#if setIsLogged === false}
 				<a href="/signin" use:link class="mr-5 hover:text-gray-900">Sign in</a>
 				<a href="/signup" use:link class="mr-5 hover:text-gray-900">Sign up</a>
 			{:else if setIsLogged === true}
@@ -83,6 +87,7 @@
 			{/if}
 		</nav>
 	</div>
-</header>
+</header> -->
 
+<Header />
 <Router {routes} />

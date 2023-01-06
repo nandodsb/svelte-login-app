@@ -6,12 +6,20 @@
 		password = ''
 	let combined
 
-	$: combined = { username: username, password: password }
+	let csrfToken = document
+		.querySelector("meta[name='csrf-token']")
+		.getAttribute('content')
+
+	$: combined = {
+		_csrf_token: csrfToken,
+		username: username,
+		password: password,
+	}
 
 	$: handleLogin = async () => {
 		try {
 			await server.post('login', combined).then((response) => {
-				console.log('Response => ', response)
+				console.log('Response => ', csrfToken)
 				if (response.status === 200) {
 					console.log('Status => ', response.status)
 				} else {

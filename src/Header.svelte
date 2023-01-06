@@ -1,12 +1,44 @@
-<script>
+<script lang="ts">
 	import '../public/global.css'
 	import { link } from 'svelte-spa-router'
-	
+	import {
+		greeting,
+		isLogged,
+		IsDisconnected,
+		message,
+		success,
+	} from './stores'
+	import { fetcher } from './fetcher.ts'
+	import { server } from './api'
+	import { onDestroy } from 'svelte'
+
+	let setIsLogged, setIsDisconnected
+	let info
+
+	isLogged.subscribe((value) => {
+		setIsLogged = value
+	})
+
+	IsDisconnected.subscribe((value) => {
+		setIsDisconnected = value
+	})
+
+	onDestroy(() => {
+		fetcher().then((response) => {
+			info = response.data
+			console.log(info.data)
+		})
+	})
+
+	async function handleLogout() {
+		await server.delete('logout')
+		setIsDisconnected = true
+	}
 </script>
 
-<header class="text-gray-600 body-font">
+<header class="text-white body-font bg-indigo-500">
 	<div
-		class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
+		class="container mx-auto flex flex-wrap pt-3 pb-2 px-8 flex-col md:flex-row justify-center items-center"
 	>
 		<a
 			href="/"
@@ -30,30 +62,21 @@
 		<nav
 			class="md:ml-auto flex flex-wrap items-center text-base justify-center"
 		>
-			<a href="/login" use:link class="mr-5 hover:text-gray-900">Login</a>
-			<a href="/register" use:link class="mr-5 hover:text-gray-900">Register</a>
-			{#if setIsLogged === true}
-				<a href="/signin" use:link class="mr-5 hover:text-gray-900">Sign in</a>
+			<!-- <a href="/login" use:link class="mr-5 hover:text-gray-900">Login</a>
+			<a href="/register" use:link class="mr-5 hover:text-gray-900">Register</a> -->
+			{#if setIsDisconnected === true}
+				<a href="/signin" use:link class="mr-5 hover:text-gray-900">Signin</a>
 				<a href="/signup" use:link class="mr-5 hover:text-gray-900">Sign up</a>
 			{:else}
-				<a href="/logout" use:link class="mr-5 hover:text-gray-900">Logout</a>
+				<p class="mr-5">{info.data.email}</p>
+				<a
+					href="/signin"
+					on:click={handleLogout}
+					use:link
+					class="mr-5 hover:text-gray-900">Logout</a
+				>
 				<!-- <a href="/signup" use:link class="mr-5 hover:text-gray-900">Sign up</a> -->
 			{/if}
 		</nav>
-		<button
-			class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
-			>Button
-			<svg
-				fill="none"
-				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				class="w-4 h-4 ml-1"
-				viewBox="0 0 24 24"
-			>
-				<path d="M5 12h14M12 5l7 7-7 7" />
-			</svg>
-		</button>
 	</div>
 </header>

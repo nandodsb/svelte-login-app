@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import { server } from './api'
+	import type { IUser } from './interfaces'
 
 	let name = '',
 		username = '',
 		email = '',
 		password = ''
 
-	let form_data
+	let form_data = {}
 
 	$: form_data = {
 		name: name,
@@ -16,7 +17,7 @@
 		password: password,
 	}
 
-	$: handleRegister = async () => {
+	async function handleRegister() {
 		try {
 			await server.post('register', form_data).then((response) => {
 				console.log('Response => ', response)

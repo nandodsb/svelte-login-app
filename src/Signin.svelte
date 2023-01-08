@@ -1,19 +1,31 @@
-<script>
-	
+<script lang="ts">
 	import { push } from 'svelte-spa-router'
 	import { server } from './api'
-
+	import { isLogged, success } from './stores'
 
 	let username = '',
 		password = ''
-	let form_data
+
+	let form_data = {}
 
 	$: form_data = { username: username, password: password }
 
-	$: handleLogin = async () => {
+	let setIsLogged: boolean, setSuccess: boolean
+	let info
+
+	isLogged.subscribe((value) => {
+		setIsLogged = value
+	})
+
+	success.subscribe((value) => {
+		setSuccess = value
+	})
+
+	async function handleLogin() {
 		try {
 			await server.post('login', form_data).then((response) => {
-				console.log('Response => ', response)
+				setIsLogged = true
+				setSuccess = true
 				if (response.status === 200) {
 					console.log('Status => ', response.status)
 				} else {

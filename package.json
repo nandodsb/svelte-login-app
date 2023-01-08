@@ -45,6 +45,7 @@
     "kit": "github:sveltejs/kit",
     "mithril": "^2.2.2",
     "sirv-cli": "^2.0.0",
+    "svelte-routing": "^1.6.0",
     "svelte-spa-router": "^3.3.0"
   }
 }

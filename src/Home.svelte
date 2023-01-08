@@ -5,7 +5,7 @@
 		isLogged,
 		message,
 		success,
-		IsDisconnected		
+		IsDisconnected,
 	} from './stores'
 	import { server } from './api'
 	import { Toast } from 'flowbite-svelte'
@@ -13,12 +13,7 @@
 	import { onMount, onDestroy } from 'svelte'
 	import { fetcher } from './fetcher.ts'
 
-	let setGreeting,
-		setIsLogged,
-		setMessage,
-		setSuccess,
-		setIsDisconnected
-		
+	let setGreeting, setIsLogged, setMessage, setSuccess, setIsDisconnected
 
 	greeting.subscribe((value) => {
 		setGreeting = value
@@ -40,8 +35,6 @@
 		setIsDisconnected = value
 	})
 
-	
-
 	// let csrfToken = document
 	// 	.querySelector("meta[name='csrf-token']")
 	// 	.getAttribute('content')
@@ -49,8 +42,6 @@
 	// let data = {
 	// 	_csrf_token: csrfToken,
 	// }
-
-	
 
 	// fetcher()
 	// 	.then((response) => {
@@ -69,30 +60,33 @@
 	// 		}
 	// 	})
 
-	onMount(async () => {
-		try {
+
+		onMount(async () => {
 			let response = await server.get('getme')
 
 			let info = await response.data
 
 			if (response.status === 200) {
 				setGreeting = `Welcome ${info.data.name}`
-				setMessage = `You are logged!`				
+				setMessage = `You are logged!`
 				setIsLogged = true
+				setIsDisconnected = false
+				setSuccess = true
 			}
-		} catch (error) {
-			if (error.status !== 200) {
+
+			if (response.status !== 200) {
 				setMessage
 				setSuccess = false
-				console.log(error)
+				setIsLogged = false
+				setIsDisconnected = true
 			}
-		}
-	})
+		})
+
 
 	async function handleLogout() {
 		await server.delete('logout')
+		setIsLogged = false
 		setIsDisconnected = true
-		setSuccess = false
 	}
 </script>
 
@@ -122,7 +116,7 @@
 			</svelte:fragment>
 			<span>{setMessage}</span>
 		</Toast>
-	{:else}
+	{:else if setSuccess === false}
 		<Toast
 			color="red"
 			class="mb-2 bg-indigo-300"
@@ -166,11 +160,11 @@
 					class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0"
 					>Login</a
 				>
-			{:else if setIsLogged === true}
+			{:else}
 				<a
 					href="/signin"
 					use:link
-					on:click={handleLogout}
+					on:click|preventDefault={handleLogout}
 					class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0"
 					>Logout</a
 				>

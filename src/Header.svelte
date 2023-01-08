@@ -23,15 +23,22 @@
 		setIsDisconnected = value
 	})
 
-	onDestroy(() => {
-		fetcher().then((response) => {
-			info = response.data
-			console.log(info.data)
-		})
+	fetcher().then((response) => {
+		info = response.data
+		if (response.status === 200) {
+			setIsLogged = true
+			setIsDisconnected = false
+		}
+
+		if (response.status !== 200) {
+			setIsLogged = false
+			setIsDisconnected = true
+		}
 	})
 
 	async function handleLogout() {
 		await server.delete('logout')
+		setIsLogged = false
 		setIsDisconnected = true
 	}
 </script>
@@ -43,21 +50,9 @@
 		<a
 			href="/"
 			use:link
-			class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
+			class="flex flex-wrap text-medium items-center text-gray-900 mb-2 ml:mb-auto"
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
-				viewBox="0 0 24 24"
-			>
-				<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-			</svg>
-			<span class="ml-3 text-xl">Tailblocks</span>
+			<span class="text-xl text-white">Svelte Login App</span>
 		</a>
 		<nav
 			class="md:ml-auto flex flex-wrap items-center text-base justify-center"
@@ -67,7 +62,7 @@
 			{#if setIsDisconnected === true}
 				<a href="/signin" use:link class="mr-5 hover:text-gray-900">Signin</a>
 				<a href="/signup" use:link class="mr-5 hover:text-gray-900">Sign up</a>
-			{:else}
+			{:else if setIsLogged === true}
 				<p class="mr-5">{info.data.email}</p>
 				<a
 					href="/signin"
